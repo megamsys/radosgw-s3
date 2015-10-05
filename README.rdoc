@@ -1,0 +1,123 @@
+= radosgw-S3
+
+This gem is used to access ceph storage and to create radosgw-admin user. 
+
+
+== Installation
+
+    gem install radosgw-s3
+
+= Ceph-radosgw user
+
+
+radosgw-admin guide to {create radosgw user}[http://docs.ceph.com/docs/master/radosgw/admin/].
+
+
+== Usage
+
+=== Initialize the service
+
+    require "radosgw-s3"
+    service = CEPH::Radosgw.new(:ipaddress => "RADOSGW_HOST_IP",
+                              :username => "RADOSGW_HOST_USERNAME",
+                              :user_password => "RADOSGW_HOST_USER_PASSWORD",
+    )
+
+
+=== create user
+
+    service.user_create("UID_NAME")
+
+== See also
+
+* radosgw-admin[http://docs.ceph.com/docs/master/radosgw/admin/]
+
+
+= radosgw-S3
+
+radosgw-S3 library provides access to {Ceph's radosgw storage}[http://docs.ceph.com/docs/master/radosgw/].
+
+=== Initialize the service
+
+    require "radosgw-s3"
+    service = S3::Service.new(:access_key_id => "...",
+                              :secret_access_key => "...",
+			      :host => "127.0.0.1")
+
+=== List buckets
+
+    service.buckets
+    #=> [#<S3::Bucket:first-bucket>,
+    #    #<S3::Bucket:second-bucket>]
+
+=== Find bucket
+
+    first_bucket = service.buckets.find("first-bucket")
+    #=> #<S3::Bucket:first-bucket>
+
+=== Create bucket
+
+    new_bucket = service.buckets.build("newbucketname")
+    new_bucket.save(:location => :eu)
+
+
+=== List objects in a bucket
+
+    first_bucket.objects
+    #=> [#<S3::Object:/first-bucket/lenna.png>,
+    #    #<S3::Object:/first-bucket/lenna_mini.png>]
+
+=== Find object in a bucket
+
+    object = first_bucket.objects.find("lenna.png")
+    #=> #<S3::Object:/first-bucket/lenna.png>
+
+=== Access object metadata (cached from find)
+
+    object.content_type
+    #=> "image/png"
+
+=== Access object content (downloads the object)
+
+    object.content
+    #=> "\x89PNG\r\n\x1A\n\x00\x00\x00\rIHDR\x00..."
+
+=== Delete an object
+
+    object.destroy
+    #=> true
+
+=== Create an object
+
+    new_object = bucket.objects.build("bender.png")
+    #=> #<S3::Object:/synergy-staging/bender.png>
+
+    new_object.content = open("bender.png")
+
+    new_object.save
+    #=> true
+
+Please note that new objects are created with "private" ACL by
+default.
+
+=== Fetch ACL
+
+   object = bucket.objects.find('lenna.png')
+   object.request_acl # or bucket.request_acl
+
+This will return hash with all users/groups and theirs permissions
+
+=== Modify ACL
+
+   object = bucket.objects.find("lenna.png")
+   object.copy(:key => "lenna.png", :bucket => bucket, :acl => :public_read)
+
+== See also
+
+* rubygems[http://rubygems.org/gems/radosgw-s3]
+* repository[http://github.com/megamsys/radosgw-s3]
+* {issue tracker}[http://github.com/megamsys/radosgw-s3/issues]
+
+== Copyright
+
+See LICENSE[http://github.com/megamsys/s3/raw/master/LICENSE] for details.
