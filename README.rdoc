@@ -1,6 +1,6 @@
 = radosgw-S3
 
-radosgw-S3 library provides access to {Ceph's radosgw storage}[http://docs.ceph.com/docs/master/radosgw/].
+This gem is used to access ceph storage and to create radosgw-admin user. 
 
 
 == Installation
@@ -32,6 +32,10 @@ radosgw-admin guide to {create radosgw user}[http://docs.ceph.com/docs/master/ra
 
 * radosgw-admin[http://docs.ceph.com/docs/master/radosgw/admin/]
 
+
+= radosgw-S3
+
+radosgw-S3 library provides access to {Ceph's radosgw storage}[http://docs.ceph.com/docs/master/radosgw/].
 
 === Initialize the service
 
