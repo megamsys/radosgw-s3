@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.name        = "radosgw-s3"
   s.version     = S3::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Thomas Alrin, Kishorekumar Neelamegam, Rajthilak,"Kuba Kuźma"]
-  s.email       = ["thomasalrin@megam.io","nkishore@megam.io", "rajthilak@megam.io","kuba@jah.pl"]
+  s.authors     = ["Thomas Alrin, Kishorekumar Neelamegam, Rajthilak, Kuba Kuźma"]
+  s.email       = ["thomasalrin@megam.io", "nkishore@megam.io", "rajthilak@megam.io", "kuba@jah.pl"]
   s.homepage    = "http://github.com/megamsys/radosgw-s3"
   s.summary     = "Library for accessing ceph objects and buckets"
   s.description = "radosgw-s3 library provides access to your ceph-radosgw. It supports both: radosgw user creation and bucket operation using REST API."
