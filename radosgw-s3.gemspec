@@ -6,18 +6,15 @@ $LOAD_PATH.unshift File.expand_path("../lib", __FILE__)
 require "s3/version"
 
 Gem::Specification.new do |s|
-  s.name        = "s3"
+  s.name        = "radosgw-s3"
   s.version     = S3::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Kuba Kuźma"]
-  s.email       = ["kuba@jah.pl"]
-  s.homepage    = "http://github.com/qoobaa/s3"
-  s.summary     = "Library for accessing S3 objects and buckets"
-  s.description = "S3 library provides access to Amazon's Simple Storage Service. It supports both: European and US buckets through REST API."
-  s.license     = "MIT"
-
-  s.required_rubygems_version = ">= 1.3.6"
-  s.rubyforge_project         = "s3"
+  s.authors     = ["Thomas Alrin, Kishorekumar Neelamegam, Rajthilak,"Kuba Kuźma"]
+  s.email       = ["thomasalrin@megam.io","nkishore@megam.io", "rajthilak@megam.io","kuba@jah.pl"]
+  s.homepage    = "http://github.com/megamsys/radosgw-s3"
+  s.summary     = "Library for accessing ceph objects and buckets"
+  s.description = "radosgw-s3 library provides access to your ceph-radosgw. It supports both: radosgw user creation and bucket operation using REST API."
+  s.license = "Apache V2"
 
   s.add_dependency "proxies", "~> 0.2.0"
   s.add_development_dependency "rake"

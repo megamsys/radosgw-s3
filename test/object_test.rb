@@ -5,6 +5,7 @@ class ObjectTest < Test::Unit::TestCase
   def setup
     @service = S3::Service.new(
       :access_key_id => "1234",
+	:host =>  "192.168.1.248",
       :secret_access_key => "1337"
     )
     @bucket_images = S3::Bucket.send(:new, @service, "images")

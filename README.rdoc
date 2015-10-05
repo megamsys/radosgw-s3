@@ -1,24 +1,44 @@
-= S3
+= radosgw-S3
 
-{<img src="https://travis-ci.org/qoobaa/s3.svg?branch=master" alt="Build Status" />}[https://travis-ci.org/qoobaa/s3]
+radosgw-S3 library provides access to {Ceph's radosgw storage}[http://docs.ceph.com/docs/master/radosgw/].
 
-S3 library provides access to {Amazon's Simple Storage Service}[http://aws.amazon.com/s3/].
-
-It supports *all* S3 regions through the {REST API}[http://docs.amazonwebservices.com/AmazonS3/latest/API/APIRest.html].
 
 == Installation
 
-    gem install s3
+    gem install radosgw-s3
+
+= Ceph-radosgw user
+
+
+radosgw-admin guide to {create radosgw user}[http://docs.ceph.com/docs/master/radosgw/admin/].
+
 
 == Usage
 
 === Initialize the service
 
-    require "s3"
+    require "radosgw-s3"
+    service = CEPH::Radosgw.new(:ipaddress => "RADOSGW_HOST_IP",
+                              :username => "RADOSGW_HOST_USERNAME",
+                              :user_password => "RADOSGW_HOST_USER_PASSWORD",
+    )
+
+
+=== create user
+
+    service.user_create("UID_NAME")
+
+== See also
+
+* radosgw-admin[http://docs.ceph.com/docs/master/radosgw/admin/]
+
+
+=== Initialize the service
+
+    require "radosgw-s3"
     service = S3::Service.new(:access_key_id => "...",
                               :secret_access_key => "...",
 			      :host => "127.0.0.1")
-    #=> #<S3::Service:...>
 
 === List buckets
 
@@ -36,9 +56,6 @@ It supports *all* S3 regions through the {REST API}[http://docs.amazonwebservice
     new_bucket = service.buckets.build("newbucketname")
     new_bucket.save(:location => :eu)
 
-Remember that bucket name for EU can't include "_" (underscore).
-
-Please refer to: http://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html for more information about bucket name restrictions.
 
 === List objects in a bucket
 
@@ -91,20 +108,12 @@ This will return hash with all users/groups and theirs permissions
    object = bucket.objects.find("lenna.png")
    object.copy(:key => "lenna.png", :bucket => bucket, :acl => :public_read)
 
-=== Upload file direct to amazon
-
-==== Rails 3
-
-Check the {example in this gist}[https://gist.github.com/3169039], which describes how to use
-a simple form element to upload files directly to S3.
-
 == See also
 
-* rubygems[http://rubygems.org/gems/s3]
-* repository[http://github.com/qoobaa/s3]
-* {issue tracker}[http://github.com/qoobaa/s3/issues]
-* documentation[http://rubydoc.info/github/qoobaa/s3/master/frames]
+* rubygems[http://rubygems.org/gems/radosgw-s3]
+* repository[http://github.com/megamsys/radosgw-s3]
+* {issue tracker}[http://github.com/megamsys/radosgw-s3/issues]
 
 == Copyright
 
-Copyright (c) 2009 Jakub Kuźma, Mirosław Boruta. See LICENSE[http://github.com/qoobaa/s3/raw/master/LICENSE] for details.
+See LICENSE[http://github.com/megamsys/s3/raw/master/LICENSE] for details.

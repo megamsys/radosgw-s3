@@ -4,6 +4,7 @@ class ConnectionTest < Test::Unit::TestCase
   def setup
     @connection = S3::Connection.new(
       :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
       :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
     )
     @http_request = Net::HTTP.new("")

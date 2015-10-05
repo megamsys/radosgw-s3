@@ -16,6 +16,7 @@ class ServiceTest < Test::Unit::TestCase
 
     @service_empty_buckets_list = S3::Service.new(
       :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
       :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
     )
     @response_empty_buckets_list = Net::HTTPOK.new("1.1", "200", "OK")
@@ -24,6 +25,7 @@ class ServiceTest < Test::Unit::TestCase
 
     @service_buckets_list = S3::Service.new(
       :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
       :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
     )
     @response_buckets_list = Net::HTTPOK.new("1.1", "200", "OK")
@@ -32,6 +34,7 @@ class ServiceTest < Test::Unit::TestCase
 
     @service_bucket_exists = S3::Service.new(
       :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
       :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
     )
     @response_bucket_exists = Net::HTTPNotFound.new("1.1", "200", "OK")
@@ -40,6 +43,7 @@ class ServiceTest < Test::Unit::TestCase
 
     @service_bucket_not_exists = S3::Service.new(
       :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
       :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
     )
     @response_bucket_not_exists = Net::HTTPNotFound.new("1.1", "404", "Not Found")
@@ -61,6 +65,7 @@ class ServiceTest < Test::Unit::TestCase
     assert_raise ArgumentError do
       @service_bucket_exists = S3::Service.new(
         :access_key_id =>  nil,
+	:host =>  "192.168.1.248",
         :secret_access_key =>  "qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDF"
       )
     end
@@ -70,6 +75,7 @@ class ServiceTest < Test::Unit::TestCase
     assert_raise ArgumentError do
       @service_bucket_exists = S3::Service.new(
         :access_key_id =>  "12345678901234567890",
+	:host =>  "192.168.1.248",
         :secret_access_key =>  nil
       )
     end
