@@ -16,6 +16,9 @@ Gem::Specification.new do |s|
   s.description = "radosgw-s3 library provides access to your ceph-radosgw. It supports both: radosgw user creation and bucket operation using REST API."
   s.license = "Apache V2"
 
+  s.required_rubygems_version = ">= 1.3.6"
+  s.rubyforge_project         = "s3"
+
   s.add_dependency "proxies", "~> 0.2.0"
   s.add_development_dependency "rake"
   s.add_development_dependency "json"
@@ -27,3 +30,4 @@ Gem::Specification.new do |s|
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = "lib"
 end
+
