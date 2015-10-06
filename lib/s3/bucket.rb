@@ -99,7 +99,7 @@ module S3
 
     # Returns host name of the bucket according (see #vhost? method)
     def host
-      vhost? ? "#@name.#{HOST}" : "#{HOST}"
+      vhost? ? "#@name.#{HOST}" : "#{service.host}"
     end
 
     # Returns path prefix for non +VHOST+ bucket. Path prefix is used
