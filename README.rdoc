@@ -29,14 +29,16 @@ radosgw-admin guide to {create radosgw user}[http://docs.ceph.com/docs/master/ra
     service.user_create("UID_NAME")
 
 It will give you the access_key and secret_key in hash format
-Eg : {"access_key"=>"8OC3R0QYPOW9TWE6M4L7", "secret_key"=>"+dDV9U+0hx7VufeFGWvF+34AC9g1IcrsIrOzLtZL"}
+
+    {"access_key"=>"8OC3R0QYPOW9TWE6M4L7", "secret_key"=>"+dDV9U+0hx7VufeFGWvF+34AC9g1IcrsIrOzLtZL"}
 
 === Get user Usage
 
     service.user_usage("UID_NAME")
 
-It will return something like below
-Eg : {"total_objects"=>"2", "total_bytes"=>"102400", "last_update"=>"2015-10-09 05:45:02.466953Z"}
+It will return something like 
+
+    {"total_objects"=>"2", "total_bytes"=>"102400", "last_update"=>"2015-10-09 05:45:02.466953Z"}
 
 == See also
 
