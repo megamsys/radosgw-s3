@@ -31,5 +31,17 @@ module CEPH
     secret_hash
     end
 
+    def user_usage(uid)
+	user_usage_json = ""
+	Net::SSH.start( @ipaddress, @username, :password => @user_password ) do|ssh| 
+		user_usage_json = ssh.exec!("sudo radosgw-admin user stats --uid='#{uid}'")
+	end
+
+
+    user_usage_hash = JSON.parse(user_usage_json)
+    usage_hash = {"total_objects" => "#{user_usage_hash['stats']['total_entries']}", "total_bytes" => "#{user_usage_hash['stats']['total_bytes_rounded']}", "last_update" => "#{user_usage_hash['last_stats_update']}" }
+    usage_hash
+    end
+
   end
 end
