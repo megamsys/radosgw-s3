@@ -37,10 +37,13 @@ module CEPH
 		user_usage_json = ssh.exec!("sudo radosgw-admin user stats --uid='#{uid}'")
 	end
 
-
+    if user_usage_json.include? "ERROR: can't read user header: (2) No such file or directory"
+	usage_hash = {"total_objects" => "0", "total_bytes" => "0", "last_update" => "#{Time.now}" }
+    else
     user_usage_hash = JSON.parse(user_usage_json)
     usage_hash = {"total_objects" => "#{user_usage_hash['stats']['total_entries']}", "total_bytes" => "#{user_usage_hash['stats']['total_bytes_rounded']}", "last_update" => "#{user_usage_hash['last_stats_update']}" }
     usage_hash
+    end
     end
 
   end
