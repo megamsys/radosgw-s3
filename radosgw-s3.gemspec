@@ -20,15 +20,14 @@ Gem::Specification.new do |s|
   s.rubyforge_project         = "s3"
 
   s.add_dependency "proxies", "~> 0.2.0"
-  s.add_dependency "net-ssh"
-  s.add_development_dependency "rake"
-  s.add_development_dependency "json"
-  s.add_development_dependency "test-unit"
-  s.add_development_dependency "mocha"
-  s.add_development_dependency "bundler"
+  s.add_dependency "net-ssh", "~> 3.0"
+  s.add_development_dependency "rake", "~> 10.4"
+  s.add_development_dependency "json", "~> 1.8"
+  s.add_development_dependency "test-unit", "~> 3.1"
+  s.add_development_dependency "mocha", "~> 1.1"
+  s.add_development_dependency "bundler", "~> 1.10"
 
   s.files        = `git ls-files`.split("\n")
   s.executables  = `git ls-files`.split("\n").map{|f| f =~ /^bin\/(.*)/ ? $1 : nil}.compact
   s.require_path = "lib"
 end
-
