@@ -8,7 +8,7 @@ module S3
     # Compares service to other, by <tt>access_key_id</tt> and
     # <tt>secret_access_key</tt>
     def ==(other)
-      self.access_key_id == other.access_key_id and self.secret_access_key == other.secret_access_key
+      access_key_id == other.access_key_id && secret_access_key == other.secret_access_key
     end
 
     # Creates new service.
@@ -28,8 +28,8 @@ module S3
       # The keys for these required options might exist in the options hash, but
       # they might be set to something like `nil`. If this is the case, we want
       # to fail early.
-      raise ArgumentError, "Missing :access_key_id." if !options[:access_key_id]
-      raise ArgumentError, "Missing :secret_access_key." if !options[:secret_access_key]
+      fail ArgumentError, 'Missing :access_key_id.' unless options[:access_key_id]
+      fail ArgumentError, 'Missing :secret_access_key.' unless options[:secret_access_key]
 
       @access_key_id = options.fetch(:access_key_id)
       @secret_access_key = options.fetch(:secret_access_key)
@@ -39,14 +39,14 @@ module S3
       @timeout = options.fetch(:timeout, 60)
       @debug = options.fetch(:debug, false)
 
-      raise ArgumentError, "Missing proxy settings. Must specify at least :host." if options[:proxy] && !options[:proxy][:host]
+      fail ArgumentError, 'Missing proxy settings. Must specify at least :host.' if options[:proxy] && !options[:proxy][:host]
       @proxy = options.fetch(:proxy, nil)
     end
 
     # Returns all buckets in the service and caches the result (see
     # +reload+)
     def buckets
-      Proxy.new(lambda { list_all_my_buckets }, :owner => self, :extend => BucketsExtension)
+      Proxy.new(-> { list_all_my_buckets }, owner: self, extend: BucketsExtension)
     end
 
     # Returns the bucket with the given name. Does not check whether the
@@ -56,10 +56,15 @@ module S3
       Bucket.send(:new, self, name)
     end
 
+    # Returns the signature for POST operations done externally via javascript
+    def auth_sign
+      service_request(:post, use_authsign: true)
+    end
+
     # Returns "http://" or "https://", depends on <tt>:use_ssl</tt>
     # value from initializer
     def protocol
-      use_ssl ? "https://" : "http://"
+      use_ssl ? 'https://' : 'http://'
     end
 
     # Returns 443 or 80, depends on <tt>:use_ssl</tt> value from
@@ -69,7 +74,7 @@ module S3
     end
 
     def inspect #:nodoc:
-      "#<#{self.class}:#@access_key_id>"
+      "#<#{self.class}:#{@access_key_id}>"
     end
 
     private
@@ -81,18 +86,18 @@ module S3
     end
 
     def service_request(method, options = {})
-      connection.request(method, options.merge(:path => "/#{options[:path]}"))
+      connection.request(method, options.merge(path: "/#{options[:path]}"))
     end
 
     def connection
       return @connection if defined?(@connection)
-      @connection = Connection.new(:access_key_id => @access_key_id,
-                               :secret_access_key => @secret_access_key,
-                               :host => @host,
-                               :use_ssl => @use_ssl,
-                               :timeout => @timeout,
-                               :debug => @debug,
-                               :proxy => @proxy)
+      @connection = Connection.new(access_key_id: @access_key_id,
+                                   secret_access_key: @secret_access_key,
+                                   host: @host,
+                                   use_ssl: @use_ssl,
+                                   timeout: @timeout,
+                                   debug: @debug,
+                                   proxy: @proxy)
     end
   end
 end
