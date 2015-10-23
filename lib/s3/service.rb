@@ -58,7 +58,7 @@ module S3
 
     # Returns the signature for POST operations done externally via javascript
     def auth_sign
-      service_request(:post, use_authsign: true)
+      service_request(:post, :use_authsign => true)
     end
 
     # Returns "http://" or "https://", depends on <tt>:use_ssl</tt>

@@ -59,7 +59,7 @@ module S3
       body = options.fetch(:body, nil)
       params = options.fetch(:params, {})
       headers = options.fetch(:headers, {})
-      use_authsign = options.fetch(:use_authsign)
+      use_authsign = options.fetch(:use_authsign, false)
 
       # Must be done before adding params
       # Encodes all characters except forward-slash (/) and explicitly legal URL characters
@@ -182,7 +182,7 @@ module S3
       response = http(host).start do |http|
         host = http.address
 
-        request = send_authsign(request)
+        request = send_authsign(host, request)
 
         http.request(request)
       end
