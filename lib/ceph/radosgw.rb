@@ -19,10 +19,10 @@ module CEPH
 
 
 
-    def user_create(uid)
+    def user_create(uid, display_name)
 	ceph_user_json = ""
 	Net::SSH.start( @ipaddress, @username, :password => @user_password ) do|ssh| 
-		ceph_user_json = ssh.exec!("sudo radosgw-admin user create --uid='#{uid}'  --display-name='radosgw demo user from s3 gem'")
+		ceph_user_json = ssh.exec!("sudo radosgw-admin user create --uid='#{uid}'  --display-name='#{display_name}'")
 	end
 
 

@@ -26,7 +26,7 @@ radosgw-admin guide to {create radosgw user}[http://docs.ceph.com/docs/master/ra
 
 === create user
 
-    service.user_create("UID_NAME")
+    service.user_create("UID_NAME", "DISPLAY_NAME")
 
 It will give you the access_key and secret_key in hash format
 
