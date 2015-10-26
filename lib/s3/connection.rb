@@ -1,11 +1,10 @@
 module S3
-
   # Class responsible for handling connections to amazon hosts
   class Connection
     include Parser
 
     attr_accessor :access_key_id, :secret_access_key, :use_ssl, :timeout, :debug, :proxy, :host
-    alias :use_ssl? :use_ssl
+    alias_method :use_ssl?, :use_ssl
 
     # Creates new connection object.
     #
@@ -30,7 +29,7 @@ module S3
       @debug = options.fetch(:debug, false)
       @timeout = options.fetch(:timeout, 60)
       @proxy = options.fetch(:proxy, nil)
-      @chunk_size = options.fetch(:chunk_size, 1048576)
+      @chunk_size = options.fetch(:chunk_size, 1_048_576)
     end
 
     # Makes request with given HTTP method, sets missing parameters,
@@ -60,6 +59,7 @@ module S3
       body = options.fetch(:body, nil)
       params = options.fetch(:params, {})
       headers = options.fetch(:headers, {})
+      use_authsign = options.fetch(:use_authsign, false)
 
       # Must be done before adding params
       # Encodes all characters except forward-slash (/) and explicitly legal URL characters
@@ -70,7 +70,7 @@ module S3
         path << "?#{params}"
       end
 
-      request = Request.new(@chunk_size, method.to_s.upcase, !!body, method.to_s.upcase != "HEAD", path)
+      request = Request.new(@chunk_size, method.to_s.upcase, !!body, method.to_s.upcase != 'HEAD', path)
 
       headers = self.class.parse_headers(headers)
       headers.each do |key, value|
@@ -86,7 +86,11 @@ module S3
         request.content_length = body.respond_to?(:lstat) ? body.stat.size : body.size
       end
 
-      send_request(host, request)
+      if use_authsign
+        send_authsign(host, request)
+      else
+        send_request(host, request)
+      end
     end
 
     # Helper function to parser parameters and create single string of
@@ -104,7 +108,7 @@ module S3
       result = []
       params.each do |key, value|
         if interesting_keys.include?(key)
-          parsed_key = key.to_s.gsub("_", "-")
+          parsed_key = key.to_s.tr('_', '-')
           case value
           when nil
             result << parsed_key
@@ -113,7 +117,7 @@ module S3
           end
         end
       end
-      result.join("&")
+      result.join('&')
     end
 
     # Helper function to change headers from symbols, to in correct
@@ -142,7 +146,7 @@ module S3
       if headers
         headers.each do |key, value|
           if interesting_keys.include?(key)
-            parsed_key = key.to_s.gsub("_", "-")
+            parsed_key = key.to_s.tr('_', '-')
             parsed_value = value
             case value
             when Range
@@ -178,19 +182,7 @@ module S3
       response = http(host).start do |http|
         host = http.address
 
-        request["Date"] ||= Time.now.httpdate
-
-        if request.body
-          request["Content-Type"] ||= "application/octet-stream"
-          request["Content-MD5"] = Base64.encode64(Digest::MD5.digest(request.body)).chomp unless request.body.empty?
-        end
-
-        unless skip_authorization
-          request["Authorization"] = Signature.generate(:host => host,
-                                                        :request => request,
-                                                        :access_key_id => access_key_id,
-                                                        :secret_access_key => secret_access_key)
-        end
+        request = send_authsign(host, request)
 
         http.request(request)
       end
@@ -198,11 +190,25 @@ module S3
       if response.code.to_i == 307
         if response.body
           doc = Document.new response.body
-          send_request(doc.elements["Error"].elements["Endpoint"].text, request, true)
+          send_request(doc.elements['Error'].elements['Endpoint'].text, request, true)
         end
       else
         handle_response(response)
       end
+    end
+
+    def send_authsign(host, request, skip_authorization = false)
+        request['Date'] ||= Time.now.httpdate
+        if request.body
+          request['Content-Type'] ||= 'application/octet-stream'
+          request['Content-MD5'] = Base64.encode64(Digest::MD5.digest(request.body)).chomp unless request.body.empty?
+        end
+        unless skip_authorization
+        request['Authorization'] = Signature.generate(host: host, request: request,
+                           access_key_id: access_key_id,
+                           secret_access_key: secret_access_key)
+        end
+        request
     end
 
     def handle_response(response)
@@ -211,13 +217,13 @@ module S3
         response
       when 300...600
         if response.body.nil? || response.body.empty?
-          raise Error::ResponseError.new(nil, response)
+          fail Error::ResponseError.new(nil, response)
         else
           code, message = parse_error(response.body)
-          raise Error::ResponseError.exception(code).new(message, response)
+          fail Error::ResponseError.exception(code).new(message, response)
         end
       else
-        raise(ConnectionError.new(response, "Unknown response code: #{response.code}"))
+        fail(ConnectionError.new(response, "Unknown response code: #{response.code}"))
       end
       response
     end
