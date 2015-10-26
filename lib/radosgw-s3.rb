@@ -22,6 +22,7 @@ require "s3/signature"
 require "s3/version"
 
 require "ceph/radosgw"
+require "ceph/user"
 
 module S3
   # Default (and only) host serving S3 stuff
