@@ -5,7 +5,6 @@ module CEPH
   class Radosgw
 
     attr_reader :username, :ipaddress, :user_password, :uid
-
     def initialize(options)
       raise ArgumentError, "Missing :username." if !options[:username]
       raise ArgumentError, "Missing :ipaddress." if !options[:ipaddress]
