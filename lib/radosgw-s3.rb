@@ -7,7 +7,6 @@ require "net/https"
 require "openssl"
 require "rexml/document"
 require "time"
-
 require "proxies"
 require "s3/objects_extension"
 require "s3/buckets_extension"
@@ -20,8 +19,8 @@ require "s3/request"
 require "s3/service"
 require "s3/signature"
 require "s3/version"
-
 require "ceph/radosgw"
+require "ceph/user"
 
 module S3
   # Default (and only) host serving S3 stuff
