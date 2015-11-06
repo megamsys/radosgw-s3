@@ -3,7 +3,7 @@ module CEPH
     def execution(command)
       radosgw_json =
       begin
-        Net::SSH.start( @ipaddress, @username, :password => @user_password ) do|ssh|
+        Net::SSH.start( @ipaddress, @username, :password => @user_password, :non_interactive=>true ) do|ssh|
           radosgw_json = ssh.exec!(command)
         end
       rescue Timeout::Error
