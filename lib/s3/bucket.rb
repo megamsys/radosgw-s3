@@ -94,7 +94,12 @@ module S3
     # name. If the bucket contains characters like underscore it can't
     # be used as +VHOST+ (e.g. <tt>bucket_name.s3.amazonaws.com</tt>)
     def vhost?
-      !service.use_ssl && service.use_vhost && "#@name.#{HOST}" =~ /\A#{URI::REGEXP::PATTERN::HOSTNAME}\Z/
+	#MEGAM_FIX. If this method returns true "MethodNotAllowed" exception arises. (parse_error': undefined method `text' for nil:NilClass)
+	#Fix for bucketname without '_'
+	#HOST & PATH======vhost=flase======>192.168.1.102<======>asd2/<==========
+	#HOST & PATH======vhost=true======>asd2.s3.amazonaws.com<======><==========
+      #!service.use_ssl && service.use_vhost && "#@name.#{HOST}" =~ /\A#{URI::REGEXP::PATTERN::HOSTNAME}\Z/
+	false
     end
 
     # Returns host name of the bucket according (see #vhost? method)
