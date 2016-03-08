@@ -1,7 +1,7 @@
 module CEPH
   class User < Radosgw
     def execution(command)
-      radosgw_json =
+      radosgw_json =""
       begin
         Net::SSH.start( @ipaddress, @username, :password => @user_password, :non_interactive=>true ) do|ssh|
           radosgw_json = ssh.exec!(command)
@@ -31,7 +31,7 @@ module CEPH
 
     def create(uid, display_name)
       ceph_user_json = ""
-      ceph_user_json = execution("sudo radosgw-admin user create --uid='#{uid}'  --display-name='#{display_name}'")
+      ceph_user_json = execution("sudo radosgw-admin user  create --uid='#{uid}'  --display-name='#{display_name}'")
       begin
         ceph_user_hash = JSON.parse(ceph_user_json)
         secret_hash = {"access_key" => "#{ceph_user_hash['keys'][0]['access_key']}", "secret_key" => "#{ceph_user_hash['keys'][0]['secret_key']}" }
@@ -61,6 +61,18 @@ module CEPH
         return "could not fetch user info: no user info saved"
       end
     end
+
+    def info(uid)
+      user_info_json=""
+     user_info_json = execution("sudo radosgw-admin user info --uid='#{uid}'")
+     begin
+       user_info_hash = JSON.parse(user_info_json)
+       info_hash={"secret_key" => "#{user_info_hash['keys'][0]['secret_key']}","access_key" => "#{user_info_hash['keys'][0]['access_key']}","user_id"=>"#{user_info_hash['user_id']}","User_name"=>"#{user_info_hash['display_name']}"}
+       info_hash
+       rescue JSON::ParserError => e
+       return user_info_json
+     end
+   end
 
   end
 end
