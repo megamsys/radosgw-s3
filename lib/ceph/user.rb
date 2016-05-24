@@ -32,6 +32,12 @@ module CEPH
     def create(uid, display_name)
       ceph_user_json = ""
       ceph_user_json = execution("sudo radosgw-admin user  create --uid='#{uid}'  --display-name='#{display_name}'")
+      if ceph_user_json.include? ": (17) File exists"
+        puts "String includes '(17) File exists'"
+        ceph_user_json = ceph_user_json.gsub!(/.*?(?=exists)/im, "")
+        ceph_user_json =  ceph_user_json.sub('exists', "")
+      end
+
       begin
         ceph_user_hash = JSON.parse(ceph_user_json)
         secret_hash = {"access_key" => "#{ceph_user_hash['keys'][0]['access_key']}", "secret_key" => "#{ceph_user_hash['keys'][0]['secret_key']}" }
