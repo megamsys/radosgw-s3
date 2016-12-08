@@ -65,6 +65,7 @@ module S3
     # Destroys given bucket. Raises an S3::Error::BucketNotEmpty
     # exception if the bucket is not empty. You can destroy non-empty
     # bucket passing true (to force destroy)
+=begin
     def destroy(force = false)
       delete_bucket
       true
@@ -74,6 +75,21 @@ module S3
         retry
       else
         raise
+      end
+    end
+=end
+    def destroy(force = false)
+      if objects.any?
+	      if force
+           objects.destroy_all
+           delete_bucket
+           true
+        else
+          raise
+        end
+      else
+        delete_bucket
+        true
       end
     end
 
@@ -132,6 +148,7 @@ module S3
     def inspect #:nodoc:
       "#<#{self.class}:#{name}>"
     end
+
 
     def save_acl(options = {})
       headers = {}
