@@ -3,7 +3,7 @@ module S3
   class Connection
     include Parser
 
-    attr_accessor :access_key_id, :secret_access_key, :use_ssl, :timeout, :debug, :proxy, :host
+    attr_accessor :access_key_id, :secret_access_key, :use_ssl, :timeout, :debug, :proxy, :host, :custom_port
     alias_method :use_ssl?, :use_ssl
 
     # Creates new connection object.
@@ -30,6 +30,7 @@ module S3
       @timeout = options.fetch(:timeout, 60)
       @proxy = options.fetch(:proxy, nil)
       @chunk_size = options.fetch(:chunk_size, 1_048_576)
+      @custom_port = options.fetch(:port, false)
     end
 
     # Makes request with given HTTP method, sets missing parameters,
@@ -162,7 +163,7 @@ module S3
     private
 
     def port
-      use_ssl ? 443 : 80
+      custom_port ? custom_port : (use_ssl ? 443 : 80)
     end
 
     def proxy_settings

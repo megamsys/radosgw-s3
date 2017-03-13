@@ -54,7 +54,9 @@ radosgw-S3 library provides access to {Ceph's radosgw storage}[http://docs.ceph.
     require "radosgw-s3"
     service = S3::Service.new(:access_key_id => "...",
                               :secret_access_key => "...",
-			      :host => "127.0.0.1")
+                              :host => "127.0.0.1",
+                              :port => 8000 # Defaults to 443 or 80 if not set
+                             )
 
 === List buckets
 
